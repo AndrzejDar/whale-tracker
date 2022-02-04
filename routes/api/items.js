@@ -1,6 +1,6 @@
 const express = require("express");
-const res = require("express/lib/response");
 const router = express.Router();
+const auth = require('../../middleware/auth');
 
 //Item Model
 const Item = require("../../models/Item");
@@ -9,7 +9,6 @@ const Item = require("../../models/Item");
 // @desc    Get All Items
 // @access  Public
 router.get('/', (req, res) => {
-  //res.header("Access-Control-Allow-Origin", "*");//CORS WORKAROUND, hardcoding port
   Item.find()
     .sort({ date: -1 })
     .then((items) => res.json(items))
@@ -17,21 +16,21 @@ router.get('/', (req, res) => {
 
 // @route   POST api/items
 // @desc    Creat An Item
-// @access  Public
-router.post("/", (req, res) => {
-  //res.header("Access-Control-Allow-Origin", "*");//CORS WORKAROUND, hardcoding port
+// @access  Private
+router.post("/", auth, (req, res) => {
   const newItem = new Item({
-    name: req.body.name,
+    name: req.body.name
   });
 
-  newItem.save().then((item) => res.json(item));
+  newItem.save()
+    .then((item) => res.json(item))
+    .catch(err=>console.log(err));
 });
 
 // @route   DELETE api/items/:id
 // @desc    Delete an Item
-// @access  Public
-router.delete("/:id", (req, res) => {
-  //res.header("Access-Control-Allow-Origin", "*");//CORS WORKAROUND, hardcoding port
+// @access  Private
+router.delete("/:id", auth, (req, res) => {
   Item.findById(req.params.id)
     .then((item) => item.remove().then(() => res.json({ success: true })))
     .catch((err) => {

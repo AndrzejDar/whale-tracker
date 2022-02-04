@@ -22,17 +22,19 @@ mongoose
 // USE routes
 app.use(cors());
 app.use('/api/items', items);
+console.log('test');
 
 //Serve static page in production mode
 if(process.env.NODE_ENV === 'production'){
+    console.log('in production');
     app.use(express.static('client/build'));
     app.get ('*', (req,res)=>{
+        console.log(path.resolve(__dirname, 'client','build','index.html'));
         res.sendFile(path.resolve(__dirname, 'client','build','index.html'))
     });
 }
 
 
 //Run server
-console.log(process.env.PORT);
-const port = process.env.PORT || 3000; //variable from host or 5000
-app.listen(port,()=> console.log(`server started on port: ${port}`));
+
+app.listen();

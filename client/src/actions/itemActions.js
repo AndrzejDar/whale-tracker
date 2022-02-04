@@ -1,7 +1,8 @@
 import axios from "axios";
 import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from "./types";
-
-//axios.defaults.baseURL = "http://localhost:5000/"; //CORS WORKAROUND, hardcoding port COMENT FOR PRODUCTION SERVER!!!!!!
+import { tokenConfig } from "./authActions";
+import { returnErrors } from "./errorActions";
+axios.defaults.baseURL = "http://localhost:5000/"; //CORS WORKAROUND, hardcoding port COMENT FOR PRODUCTION SERVER!!!!!!
 // axios.defaults.withCredentials = false;
 // axios.defaults.crossDomain = true;
 
@@ -15,28 +16,37 @@ export const getItems = () => (dispatch) => {
         payload: res.data,
       })
     )
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    );
 };
 
-export const addItem = (item) => (dispatch) => {
+export const addItem = item => (dispatch, getState) => {
+  console.log('in addItem Action' + item.name);
   axios
-    .post("/api/items", item)
+    .post("/api/items", item, tokenConfig(getState))
     .then((res) =>
       dispatch({
         type: ADD_ITEM,
         payload: res.data,
       })
     )
-    .catch((err) => console.log(err));
+    .catch((err) =>
+    dispatch(returnErrors(err.response.data, err.response.status))
+  );
 };
 
-export const deleteItem = (id) => (dispatch) => {
-  axios.delete(`/api/items/${id}`).then((res) =>
+export const deleteItem = (id) => (dispatch, getState) => {
+  axios.delete(`/api/items/${id}`, tokenConfig(getState))
+  .then((res) =>
     dispatch({
       type: DELETE_ITEM,
       payload: id,
     })
-  );
+  )
+  .catch((err) =>
+  dispatch(returnErrors(err.response.data, err.response.status))
+);
 };
 
 export const setItemsLoading = () => {
