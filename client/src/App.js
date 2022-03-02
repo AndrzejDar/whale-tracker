@@ -12,10 +12,13 @@ import ShoppingList from "./components/ShoppingList";
 import ItemModal from "./components/ItemModal";
 
 import { Container } from "reactstrap";
+import Wallet from "./components/Wallet";
+import WalletSearch from "./components/WalletSearch";
 
 class App extends Component {
   componentDidMount(){
-    store.dispatch(loadUser());
+    //user loading disabled
+    //store.dispatch(loadUser());
   }
   render() {
     return (
@@ -23,8 +26,10 @@ class App extends Component {
         <div className="App">
           <AppNavbar></AppNavbar>
           <Container>
-            <ItemModal></ItemModal>
-            <ShoppingList></ShoppingList>
+            {/* <ItemModal></ItemModal>
+            <ShoppingList></ShoppingList> */}
+            <WalletSearch/>
+            <Wallet></Wallet>
           </Container>
         </div>
       </Provider>

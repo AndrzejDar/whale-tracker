@@ -21,7 +21,7 @@ router.post("/", auth, (req, res) => {
   const newItem = new Item({
     name: req.body.name
   });
-
+console.log(newItem);
   newItem.save()
     .then((item) => res.json(item))
     .catch(err=>console.log(err));

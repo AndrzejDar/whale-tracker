@@ -8,13 +8,22 @@ const middleWare = [thunk];
 
 //compose alows adding middlewar and redux debuger in chrome
 //const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnchancers =
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const store = createStore(
   rootReducer,
   initialState,
-  compose(
-    applyMiddleware(...middleWare),
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  )
+  composeEnchancers(applyMiddleware(...middleWare))
 );
+
+// const store = createStore(
+//   rootReducer,
+//   initialState,
+//   compose(
+//     applyMiddleware(...middleWare),
+//     window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__(): f => f
+//   )
+// );
 
 export default store;

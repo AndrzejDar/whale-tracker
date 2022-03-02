@@ -13,3 +13,8 @@ export const REGISTER_SUCCES = 'REGISTER_SUCCES';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
 export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+
+export const GET_WALLET = 'GET_WALLET';
+export const WALLET_LOADING = 'WALLET_LOADING';
+export const ADD_WALLET = 'ADD_WALLET';
+export const DELETE_WALLET = 'DELETE_WALLET';

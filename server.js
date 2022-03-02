@@ -29,6 +29,7 @@ app.use(cors());
 app.use('/api/items', require('./routes/api/items'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/wallets', require('./routes/api/wallets'));
 
 //Serve static page in production mode
  if(process.env.NODE_ENV === 'production'){ // on cyber no acces to this variable

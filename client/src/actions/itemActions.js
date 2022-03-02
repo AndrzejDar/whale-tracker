@@ -7,6 +7,7 @@ axios.defaults.baseURL = "http://localhost:5000/"; //CORS WORKAROUND, hardcoding
 // axios.defaults.crossDomain = true;
 
 export const getItems = () => (dispatch) => {
+  console.log('in getItem Action');
   dispatch(setItemsLoading());
   axios
     .get("/api/items")

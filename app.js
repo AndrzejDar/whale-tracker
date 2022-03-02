@@ -4,6 +4,7 @@ const bodyParser = require ('body-parser');
 const cors = require('cors');
 
 const items = require('./routes/api/items');
+const wallets = require('./routes/api/wallets');
 
 const app = express();
 
@@ -22,6 +23,7 @@ mongoose
 // USE routes
 app.use(cors());
 app.use('/api/items', items);
+app.use('/api/wallets', wallets);
 console.log('test');
 
 //Serve static page in production mode
