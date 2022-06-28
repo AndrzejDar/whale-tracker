@@ -38,13 +38,18 @@ const WalletSchema = new Schema({
   lastUpdate: {
     type: Date,
   },
-  lastProfit: {
+  aROI: {
+    type: Number,
+  },
+  capex: {
+    type: Number,
+  },
+  capin: {
     type: Number,
   },
   requests: {
     type: Number,
   },
-  //transactions: [{Date: Date, Change: Number, Price:Number}],
   transactions: [TransactionSchema],
 });
 

@@ -21,7 +21,7 @@ mongoose
     //useCreateIndex: true
 
 }) //adding mongo url parser
-.then(()=> console.log('MongoDB connected'))
+.then(()=> console.log('MongoDB v1 connected'))
 .catch(err=>console.log(err));
 
 // USE routes
@@ -30,6 +30,7 @@ app.use('/api/items', require('./routes/api/items'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/wallets', require('./routes/api/wallets'));
+app.use('/api/top', require('./routes/api/lists'));
 
 //Serve static page in production mode
  if(process.env.NODE_ENV === 'production'){ // on cyber no acces to this variable

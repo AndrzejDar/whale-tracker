@@ -1,3 +1,8 @@
+// OLD VERSION
+
+
+
+
 const express = require ('express');
 const mongoose = require ('mongoose');
 const bodyParser = require ('body-parser');
@@ -17,7 +22,7 @@ const db=require('./config/keys').mongoURI;
 // Connect to Mongo
 mongoose
 .connect(db)
-.then(()=> console.log('MongoDB connected'))
+.then(()=> console.log('MongoDB v2 connected'))
 .catch(err=>console.log(err));
 
 // USE routes

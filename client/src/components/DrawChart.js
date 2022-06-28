@@ -7,11 +7,10 @@ Chart.register(...registerables);
 function DrawChart({ d1, d2 }) {
   const myCanvas = useRef(null);
 
-  useEffect(async() => {
+  useEffect(async () => {
     if (d1.dates) {
       d2.balances = await spreadDataToDates(d2, d1.dates);
       drawMainChart("btc");
-      
     }
   }, [d1]);
 
@@ -113,44 +112,56 @@ function DrawChart({ d1, d2 }) {
 
 function spreadDataToDates(d2, dates) {
   const d2balances = [];
-  console.log("dates should be equal: "+d2.dates[0]+" =? "+dates[0]);
+  // console.log("dates should be equal: " + d2.dates[0] + " =? " + dates[0]);
 
   //iterate throught operations and combaine for one day
   let tmpD2Days = [];
   let tmpD2Balance = [];
 
   for (let i = 0; i < d2.dates.length; i++) {
-if(i!=0){
-    if (d2.dates[i] != d2.dates[i - 1]) {
+    if (i != 0) {
+      if (d2.dates[i] != d2.dates[i - 1]) {
+        tmpD2Days.push(d2.dates[i]);
+        tmpD2Balance.push(d2.balances[i]);
+
+      } else {
+        tmpD2Balance[tmpD2Balance.length - 1] = d2.balances[i];
+
+      }
+    } else {
       tmpD2Days.push(d2.dates[i]);
       tmpD2Balance.push(d2.balances[i]);
-    } else {      
-      tmpD2Balance[tmpD2Balance.length - 1] =
-      d2.balances[i];
-      //console.log(tmpD2Balance[tmpD2Balance.length - 1]);
-    }}else{
-      tmpD2Days.push(d2.dates[i]);
-      tmpD2Balance.push(d2.balances[i]);
-      //console.log(tmpD2Balance[tmpD2Balance.length - 1]);
-    }
-      
-    
+    }    
   }
-//console.log(tmpD2Days);
-//console.log(tmpD2Balance);
+
+  let initBalance = 0;
+  //calculate initial balance according to avaible price data
+  tmpD2Days.forEach((el, i) => {
+    const date =
+      el.length === 10
+        ? el.slice(6) + el.slice(3, 5) + el.slice(0, 2)
+        : el.slice(5) + el.slice(2, 4) + 0 + el.slice(0, 1);
+    if (date < 20130428) {
+      initBalance = initBalance + tmpD2Balance[i];
+    }
+  });
 
   //iterate throught evry day and fill balance gaps
   dates.forEach((date) => {
+    // insert new walue
     if (date === tmpD2Days[0]) {
       d2balances.push(tmpD2Balance[0]);
       tmpD2Balance.shift();
       tmpD2Days.shift();
-    } else {
+    }
+
+    //fill gaps with previous value
+    else {
       //console.log(d2balances[d2balances.length - 1]);
       d2balances.push(d2balances[d2balances.length - 1]);
     }
+    if(d2balances[0]===undefined) d2balances[0]=initBalance;
   });
-  //console.log(d2balances);
   return d2balances;
 }
 

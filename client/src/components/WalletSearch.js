@@ -6,11 +6,7 @@ function WalletSearch({wallet,getWallet}) {
   const [searchInput, changeSearchInput] = useState("");
 
   const clickHandler = (e) => {
-    e.preventDefault();
-    //dispatch action searching wallet
-    //console.log("searching " + wallet.loading);
-    //console.log(searchInput);
-    
+    e.preventDefault();    
     getWallet(searchInput);
   };
 

@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import {setWalletStats} from '../actions/walletActions'
 
-function WalletTransactions({transData}) {
+function WalletTransactions({transData,setWalletStatsDis}) {
 const revTransData = [...transData].reverse();
 //const [transData2,changeTransData] = useState([]);
 
@@ -9,12 +11,14 @@ const revTransData = [...transData].reverse();
 
 // },[transData2])
 const startDate = new Date(revTransData[0].Date);
+console.log("start date: "+ startDate+"  from" + revTransData[0].Date);
 //console.log("first date in revtrans: " +startDate);
 //console.log("first date in trans: " +transData[0].Date);
 let balance= 0;
 let prevBalance= 0;
 let capex= 0;
 let capin =0;
+
 
 const calculateInvestmentParams=(trans)=>{
 balance = balance+trans.Change;
@@ -30,6 +34,18 @@ const AROI=(trans)=>{
   //console.log("1+"+ROI+"to pow  1/"+n+" = "+Math.pow(1+ROI,1/n));
  return (Math.pow(1+ROI,1/n)-1)*100;
 }
+
+const setWalletStats=()=>{
+  const stats= {
+    balance: balance,
+    capex: capex,
+    capin: capin
+  };
+  console.log(stats);
+  console.log("before dispatching set stats");
+  setWalletStatsDis(stats);
+}
+
 
 const calcBalance=()=>{
 prevBalance=balance;
@@ -63,11 +79,19 @@ prevBalance=balance;
         <td>{((trans.Price*balance-capex+capin)/capex*100).toFixed(2)}%</td>
         <td>{AROI(trans).toFixed(2)}%</td>
         {calcBalance()}
+        
 
     </tr>)).reverse()}
+    {setWalletStats()}
     </tbody>
     </table>
   )
 }
 
-export default WalletTransactions
+
+const mapDispatchToProps=(dispatch)=>({
+  setWalletStatsDis: (stats)=>dispatch(setWalletStats(stats)),
+})
+
+
+export default connect(null,mapDispatchToProps)(WalletTransactions)

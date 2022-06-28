@@ -1,19 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { setWalletPriceData } from "../actions/walletActions";
 import DrawChart from "./DrawChart";
 
-function WalletBalance({ transData, token }) {
+
+
+function WalletBalance({ transData, token, priceData }) {
   const [d1, changeD1] = useState({});
 
-  useEffect(async() => {
-      const tmp = await getTokenPrices(token, d2.dates[0]);
+  useEffect(async () => {
+    const tmp = await getTokenPrices(token, d2.dates[0]);
     changeD1(tmp);
-
+    
   }, []);
 
-useEffect(()=>{    
-},[d1]);
-
+  useEffect(() => {
+    priceData(d1);
+  }, [d1]);
 
   let a = [];
   let b = [];
@@ -35,23 +39,28 @@ useEffect(()=>{
   });
   b = arr;
 
-  let d2 = { dates: a, balances: b};
+  let d2 = { dates: a, balances: b };
   //console.log(d2.balances);
 
-  
   //console.log(d1);
 
   async function getTokenPrices(token, startDate) {
     let currD = new Date();
     currD = currD.toLocaleDateString();
     //console.log("daty na bazie których bobieram cene "+currD + " pierwszej transakcji" + startDate);
-    if(startDate[1]===".")startDate=0+startDate;
+    if (startDate[1] === ".") startDate = 0 + startDate;
     //console.log("start date" + startDate);
     //console.log(startDate.substring(3,5)+"."+startDate.substring(0,2)+"."+startDate.substring(6,10));
-    const tmpd = new Date(startDate.substring(3,5)+"."+startDate.substring(0,2)+"."+startDate.substring(6,10));
+    const tmpd = new Date(
+      startDate.substring(3, 5) +
+        "." +
+        startDate.substring(0, 2) +
+        "." +
+        startDate.substring(6, 10)
+    );
     //console.log("tmpd " +tmpd);
     const currDate = new Date();
-    const diff = ((currDate - tmpd) / 86400000);
+    const diff = (currDate - tmpd) / 86400000;
     //console.log(diff);
 
     const res = await axios
@@ -70,11 +79,11 @@ useEffect(()=>{
     return { dates: dates, prices: prices };
   }
 
-  return (
-    <>{d1.prices?
-      <DrawChart d1={d1} d2={d2} />:<></>}
-    </>
-  );
+  return <>{d1.prices ? <DrawChart d1={d1} d2={d2} /> : <></>}</>;
 }
 
-export default WalletBalance;
+const mapDispatchToProps=(dispatch)=>({
+  priceData: (data)=>{dispatch(setWalletPriceData(data))}
+})
+
+export default connect(null,mapDispatchToProps)(WalletBalance);
