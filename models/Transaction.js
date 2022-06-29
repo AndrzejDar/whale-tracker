@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//Create Schema
+//Create Schema -- not used in current itteration
 const TransactionSchema = new Schema({
     Date:{
         type: Date

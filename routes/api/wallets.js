@@ -19,11 +19,10 @@ router.get("/", (req, res) => {
 });
 
 // @route   GET api/wallets
-// @desc    Get Wallet of specific adres
+// @desc    Get Wallet of specific address
 // @access  Public
 router.get("/:addres", async (req, res) => {
   const ret= await manageWallet.getWallet(req);
-  //console.log("ret:" + ret);
   return await res.json(ret);
 
   // manageWallet.getWallet(req)
@@ -70,23 +69,6 @@ router.get("/:aroi", (req, res) => {
     })
     .catch((err) => console.log(err));
 });
-
-
-
-
-
-function createNewWallet2(addres) {
-  console.log("creating new wallet");
-  const newWallet = new Wallet({
-    addres: addres,
-    token: "BTC",
-  });
-  console.log(newWallet);
-  newWallet
-    .save()
-    .then(() => newWallet)
-    .catch((err) => console.log(err));
-}
 
 //export default router;
 module.exports = router; //not IE6 JS

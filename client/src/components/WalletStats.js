@@ -18,8 +18,16 @@ const WalletStats = ({
       firstActivity.slice(3, 5),
       firstActivity.slice(0, 2)
     );
-    const n = (new Date() - first) / 86400000 / 365;
-    return (Math.pow(1 + ROI, 1 / n) - 1) * 100;
+    const n = (first-new Date()) / 86400000 / 365;
+    console.log(first+10000000000);
+    console.log(new Date()+100000);
+    console.log(new Date() - first);
+    console.log((lastPrice * balance)+capin);
+    console.log(((lastPrice * balance)+capin) / capex);
+    console.log("N w dniach: "+n*365);
+    console.log(Math.pow(((lastPrice * balance)+capin) / capex, 1 / n));
+    return [((Math.pow(((lastPrice * balance)+capin) / capex, 1 / n) - 1)*100),ROI];
+    //return [(Math.pow(1 + ROI, 1 / n) - 1) * 100,ROI];
   };
 
   if (balance && lastPrice) {
@@ -31,7 +39,8 @@ const WalletStats = ({
           <li>wallet value(USD): {(balance * lastPrice).toFixed(2)}</li>
           <li>capital expense(USD): {capex.toFixed(2)}</li>
           <li>capital income(USD): {capin.toFixed(2)}</li>
-          <li>annualized ROI: {AROI()}</li>
+          <li>return od investment ROI: {AROI()[1].toFixed(2)}%</li>
+          <li>annualized ROI: {AROI()[0].toFixed(2)}%</li>
         </ul>
       </div>
     );

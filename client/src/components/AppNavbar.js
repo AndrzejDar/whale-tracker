@@ -1,4 +1,5 @@
 import React, { Children, Component } from "react";
+import {Link} from 'react-router-dom';
 import {
   Collapse,
   Navbar,
@@ -59,18 +60,21 @@ class AppNavbar extends Component {
       <div>
         <Navbar color="dark" dark expand="sm" className="mb-5">
           <Container>
-            <NavbarBrand href="/">BTC Address Tracker</NavbarBrand>
+            <NavbarBrand tag={Link} to="/">BTC Address Tracker</NavbarBrand>
             <NavbarToggler onClick={this.toggle} />
             
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <NavLink href="/top/balance">TOP Balance</NavLink>
+                  <NavLink tag={Link} to="/top/balance">TOP Balance</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="/top/aROI">TOP Gainers</NavLink>
+                  <NavLink tag={Link} to="/top/aROI">TOP Gainers</NavLink>
                 </NavItem>
                 {isAuthenticated ? authLinks : guestLinks}
+                <NavItem>
+                  <NavLink tag={Link} to="/admin">admin</NavLink>
+                </NavItem>
                 <NavItem>
                   <NavLink href="https:github.com/Andrzej">Github</NavLink>
                 </NavItem>

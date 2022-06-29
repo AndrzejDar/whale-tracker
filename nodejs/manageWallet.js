@@ -1,55 +1,34 @@
 const { default: axios } = require("axios");
-const res = require("express/lib/response");
+//const res = require("express/lib/response");
 const { Wallet, Transaction } = require("../models/Wallet");
 const { List, ListEntry } = require("../models/List");
-const { scrapeAddres, scrapeAddres2 } = require("./scrape");
+const { scrapeForLastPrice, scrapeAddressForData } = require("./scrape");
 const { listeners } = require("../models/Item");
 
-let currentPrice = {
-  price: 1,
-  date: new Date(2000, 1, 1),
-};
 
-async function getLastPrice() {
-  //console.log(new Date() - currentPrice.date);
-
-  if (new Date() - currentPrice.date > 3600000) {
-    const res = await axios
-      .get(
-        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=USD"
-      )
-      .catch((err) => {
-        console.log("couldn't get new current price");
-        return currentPrice.price;
-      });
-    //console.log("Got new current Price: " + res.data.bitcoin.usd);
-    currentPrice = {
-      price: res.data.bitcoin.usd,
-      date: new Date(),
-    };
-    return currentPrice.price;
-  }
-  return currentPrice.price;
-}
-
+//calculate wallet statistics
 const calculateWalletStats = async (transactions, price) => {
   let balance = 0;
   let capex = 0;
   let capin = 0;
 
   transactions.forEach((el) => {
+    //callculate wallet ballance (asset quantity)
     balance = balance + el.Change;
+
+    //increase capital expenditure if asset bought or increase capital gain (income) if asset sold
     if (el.Change > 0) capex = capex + el.Change * el.Price;
     else capin = capin + -el.Change * el.Price;
   });
-  //console.log(balance + "+" + capex + "+" + capin);
-  //console.log(price);
+
+  //calculate ROI
   const ROI = (price * balance - capex + capin) / capex;
-  const n =
-    (new Date() - transactions[transactions.length - 1].Date) / 86400000 / 365;
-  //console.log(ROI + " + " + n);
-  const aROI = (Math.pow(1 + ROI, 1 / n) - 1) * 100;
-  //console.log("returning complet wallet stats");
+
+  //callculate annualized ROI
+  const n =(transactions[transactions.length - 1].Date -new Date()) / 86400000 / 365;
+  const aROI = (Math.pow(((price*balance)+capin)/capex, 1 / n) - 1);
+
+ 
   return {
     tokenBalance: balance,
     aROI: aROI,
@@ -58,15 +37,20 @@ const calculateWalletStats = async (transactions, price) => {
   };
 };
 
-exports.getWallet = async function (req) {
-  const wal = await Wallet.findOne({ addres: req.params.addres });
-  //console.log("found wallet adres is:" + wal.addres);
 
+//returns requested wallet - creates new / updates old / sent existing
+exports.getWallet = async function (req) {
+
+  //find wallet
+  const wal = await Wallet.findOne({ addres: req.params.addres });
+
+  // if exists check if up to date
   if (wal) {
-    const currDate = new Date();
-    //diffrence in days
-    const diff = currDate.getTime() - wal.lastUpdate.getTime() / 86400000;
+
     //update wallet if older than 10 days
+    const currDate = new Date();    
+    const diff = (currDate.getTime() - wal.lastUpdate.getTime()) / 86400000;
+    console.log('wiek portfela:  ' + diff);
     if (diff > 10) {
       console.log("returning updated wallet");
       const res = await updateWallet(req);
@@ -76,10 +60,10 @@ exports.getWallet = async function (req) {
       return wal;
     }
   } else {
-    console.log("creating new wallet");
+    console.log("Requested wallet don't exist. Creating one...");
     const newWalletData = await createNewWallet(req);
     const newWallet = new Wallet(newWalletData);
-    console.log(newWalletData);
+    //console.log(newWalletData);
 
     // newWallet
     //   .save(err=>{
@@ -121,7 +105,10 @@ exports.getWallet = async function (req) {
     //   });
 
     // Wallet.updateOne({addres: req.params.addres}, newWalletData).then(res=>console.log(res)).catch(err=>console.log(err));
-    newWallet.save().then(res=>console.log(res)).catch(err=>console.log(err));
+
+    newWallet
+      .save()
+      .catch(err=>console.log(err));//wtf?
     return newWallet;
   }
 };
@@ -139,10 +126,10 @@ const updateWallet = async (req) => {
 const createNewWallet = async function (req) {
   //check if adress is valid
 
-  const wData = await scrapeAddres2(req.params.addres);
-  const lastPrice = await getLastPrice();
+  const wData = await scrapeAddressForData(req.params.addres);
+  const lastPrice = await scrapeForLastPrice();
 
-  if (wData.sAddres && wData.sAddres === req.params.addres) {
+  if (wData.sAddres) {
     //console.log("creating new wallet");
     const walletStats = await calculateWalletStats(wData.sData, lastPrice);
     const newWallet = {
@@ -161,7 +148,7 @@ const createNewWallet = async function (req) {
   } else console.log("inncorect scraped wallet addres");
 };
 
-//create list entry
+//create list entry -- not used
 const addToLists = (wallet) => {
   //add wallet to balance list
   const listEntry = new ListEntry(

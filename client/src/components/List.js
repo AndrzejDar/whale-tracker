@@ -5,16 +5,22 @@ import { getList } from "../actions/listActions";
 import { formatAddress } from "../utils/formatUtils";
 import AddressLink from "./addressLink";
 
+
+
 function List({ listData, loading, getList }) {
-  const location = useLocation();
+  let location = useLocation();
+  console.log(location);
   useEffect(() => {
+    console.log(location);
+    if(!listData[location.pathname])
     getList(location.pathname);
   }, []);
-
+ 
   if (loading) {
     return <div>LOADING</div>;
   } else {
-    if (!listData) {
+    if (!listData[location.pathname]) {
+      if(!loading) getList(location.pathname);
       return <div>NO DATA</div>;
     } else {
       return (
@@ -27,7 +33,7 @@ function List({ listData, loading, getList }) {
             </tr>
           </thead>
           <tbody>
-            {listData.map((el, id) => (
+            {listData[location.pathname].map((el, id) => (
               <tr key={id}>
                 <td><AddressLink address={el.addres}/></td>
                 <td>{el.tokenBalance}</td>
@@ -41,7 +47,8 @@ function List({ listData, loading, getList }) {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => (
+  {
   listData: state.list.topList,
   loading: state.list.loading,
 });

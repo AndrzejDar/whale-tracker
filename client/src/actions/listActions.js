@@ -11,7 +11,7 @@ export const getList=(location)=>(dispatch)=>{
     axios
     .get(`/api${location}`)
     .then((res) => {
-      dispatch(setList(res.data))
+      dispatch(setList(res.data,location))
     })
     .catch((err) => {       
       dispatch(returnErrors(err.response.data, err.response.status))
@@ -23,8 +23,9 @@ export const setListLoading=()=>({
 });
 
 
-export const setList=(payload)=>({
+export const setList=(payload,listType)=>({
     type: GET_WALLET_TOP_LIST,    
     payload,
+    listType
 });
 

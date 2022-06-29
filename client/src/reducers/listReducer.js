@@ -1,20 +1,22 @@
 import { GET_WALLET_TOP_LIST, TOP_LIST_LOADING } from "../actions/types";
 
 const initState = {
-  topList: [],
+  topList: {},
   loading: true,
 };
 export default function (state = initState, action) {
-  console.log(action.type);
+  console.log(action);
   switch (action.type) {
     case GET_WALLET_TOP_LIST:
+      state.topList[action.listType] = action.payload;
+      state.loading = false;
+
       return {
-        topList: action.payload,
-        loading: false,
+        ...state
       };
     case TOP_LIST_LOADING:
       return {
-        topList: [],
+        topList: {...state.topList},
         loading: true,
       };
     default:

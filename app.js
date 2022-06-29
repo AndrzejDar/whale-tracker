@@ -1,6 +1,6 @@
 // OLD VERSION
 
-
+/*
 
 
 const express = require ('express');
@@ -44,4 +44,4 @@ if(process.env.NODE_ENV === 'production'){
 
 //Run server
 
-app.listen();
+app.listen(); */

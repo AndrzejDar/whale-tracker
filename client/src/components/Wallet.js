@@ -3,8 +3,15 @@ import { connect } from "react-redux";
 import WalletTransactions from "./WalletTransactions";
 import WalletBalance from "./WalletBalance";
 import WalletStats from "./WalletStats";
+import { getWallet } from '../actions/walletActions';
 
 function Wallet({wallet,getWallet}) {
+
+//if no wallet data loaded or loading, load defaul wallet
+  useEffect(() => {
+    if(!wallet.wallet._id && !wallet.loading)getWallet();    
+  }, [])
+  
 
   return (
     <div>
@@ -21,8 +28,8 @@ function Wallet({wallet,getWallet}) {
           transData={wallet.wallet.transactions}
         />
       </>
-    ) : (
-      "LOADING DATA"
+    ) : (      
+      "LOADING DATA"         
     )}
   </div>
   )
@@ -33,7 +40,15 @@ const mapStateToProps = (state) => ({
     wallet: state.wallet,
     //isAuthenticated: state.auth.isAuthenticated,
   });  
-  export default connect(mapStateToProps)(Wallet);
+
+  const mapDispatchToProps = (dispatch) =>{
+    //setup for int wallet load
+    const defWall = "1P5ZEDWTKTFGxQjZphgWPQUpe554WKDfHQ";
+    return {
+    getWallet: ()=>{dispatch(getWallet(defWall))}
+  }
+}
+  export default connect(mapStateToProps,mapDispatchToProps)(Wallet);
 
 
 

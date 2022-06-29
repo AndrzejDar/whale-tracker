@@ -7,6 +7,7 @@ axios.defaults.baseURL = "http://localhost:5000/";
 export const getWallet = (addres) => (dispatch) => {
   dispatch(setWalletLoading());
   console.log("getting wallet of adress: " + addres);
+  
   axios
     .get(`/api/wallets/${addres}`)
     .then((res) => {
