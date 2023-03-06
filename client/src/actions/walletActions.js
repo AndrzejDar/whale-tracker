@@ -2,7 +2,7 @@ import { GET_WALLET, SET_WALLET_PRICE_DATA, SET_WALLET_STATS, WALLET_LOADING } f
 import { returnErrors } from "./errorActions";
 import axios from "axios";
 
-axios.defaults.baseURL = "http://localhost:5000/";
+//axios.defaults.baseURL = "http://localhost:5000/";
 
 export const getWallet = (addres) => (dispatch) => {
   dispatch(setWalletLoading());

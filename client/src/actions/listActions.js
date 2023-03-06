@@ -3,7 +3,7 @@ import { returnErrors } from "./errorActions";
 import { GET_WALLET_TOP_LIST, TOP_LIST_LOADING } from './types';
 
 
-axios.defaults.baseURL = "http://localhost:5000/";
+//axios.defaults.baseURL = "http://localhost:5000/";
 
 export const getList=(location)=>(dispatch)=>{
     dispatch(setListLoading());

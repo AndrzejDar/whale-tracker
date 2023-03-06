@@ -10,14 +10,14 @@ export default function (state = initialState, action) {
     case GET_ADDRESSES:
       console.log(action.payload);
       return {        
-        addresses: [...state.addresses,action.pyload],
-        //addresses: {...action.payload},
+        //addresses: [...state.addresses,action.pyload],
+        addresses: [...action.payload],
         loading: false
       };
 
     case ADDRESSES_LOADING:
       return {
-        //addresses: []...state.addresses],
+        addresses: [],
         loading:true
       };
 

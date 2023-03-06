@@ -1,7 +1,7 @@
 const express = require ('express');
 const mongoose = require ('mongoose');
-const config = require ('config')
-
+const config = require ('config');
+const path = require ('path');
 const cors = require('cors');
 
 
@@ -16,11 +16,7 @@ const db=config.get('mongoURI');
 
 // Connect to Mongo
 mongoose
-.connect(db, {
-    //useNewUrlParser: true,
-    //useCreateIndex: true
-
-}) //adding mongo url parser
+.connect(db) 
 .then(()=> console.log('MongoDB v1 connected'))
 .catch(err=>console.log(err));
 
